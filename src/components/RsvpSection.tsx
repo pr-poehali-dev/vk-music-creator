@@ -33,7 +33,15 @@ export function RsvpSection() {
           <h2 className="sec-title reveal">Форма гостя</h2>
           <p className="rsvp-sub reveal">Сможете ли вы прийти? Пожалуйста, дайте нам знать заранее</p>
           <p className="rsvp-sub reveal" style={{marginTop: '-0.5rem'}}>
-            Или напишите напрямую: <a href="https://vk.com/sonechka_nss" target="_blank" rel="noopener noreferrer" style={{color: 'var(--burgundy)', fontWeight: 600}}>ВКонтакте</a>
+            Или напишите напрямую:{' '}
+            <a
+              href="https://vk.me/sonechka_nss"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{color: 'var(--burgundy)', fontWeight: 600, textDecoration: 'underline'}}
+            >
+              написать в ВКонтакте
+            </a>
           </p>
 
           {submitted ? (

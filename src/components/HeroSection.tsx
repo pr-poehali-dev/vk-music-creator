@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
 
-// Романтическая музыка — Chopin Nocturne No.2 (Public Domain, Archive.org)
-const MUSIC_URL = 'https://archive.org/download/ChopinaNoct/Chopin-NocturneNo.2InEFlat.mp3';
+// Шопен — Ноктюрн Op.9 No.2 (публичный домен, загружен в CDN)
+const MUSIC_URL = 'https://cdn.poehali.dev/projects/968b4fb1-7f9f-468c-b13b-8b979d7207c2/bucket/music/wedding-nocturne.mp3';
 
 interface HeroSectionProps {
   audioRef: React.RefObject<HTMLAudioElement>;
@@ -57,7 +57,7 @@ export function HeroSection({
         ) : (
           <div className="mini-player reveal">
             <button className="mini-play" onClick={togglePlay}>{playing ? '⏸' : '▷'}</button>
-            <span className="mini-label">Шопен — Ноктюрн № 2</span>
+            <span className="mini-label">Шопен · Ноктюрн Op.9 №2</span>
             <input
               type="range" min={0} max={1} step={0.02}
               value={volume}
