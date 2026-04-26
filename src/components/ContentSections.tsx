@@ -15,11 +15,7 @@ export function ContentSections({ countdown }: ContentSectionsProps) {
       {/* ── COUNTDOWN ── */}
       <section className="section cream">
         <div className="sec-inner">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Cupid_Bouguereau_%281875%29.jpg/512px-Cupid_Bouguereau_%281875%29.jpg"
-            alt="Купидон"
-            className="cupid reveal"
-          />
+          <div className="cupid-emoji reveal" style={{fontSize: '7rem', lineHeight: 1}}>💘</div>
           <p className="quote-text reveal">
             Мы так счастливы пригласить вас разделить с<br />нами радость нашей любви…
           </p>
