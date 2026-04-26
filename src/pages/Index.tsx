@@ -1,14 +1,10 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
-
-const VK_NOTIFY_URL = 'https://functions.poehali.dev/207bd5e2-1d61-48ed-b39c-0753ddb6ec82';
-
-// Royalty-free track — cinematic romantic piano, similar vibe to Golden Brown x Love Story
-// Source: Pixabay (CC0)
-const MUSIC_URL = 'https://cdn.pixabay.com/download/audio/2022/10/25/audio_946b05d05e.mp3';
+import { useState, useRef, useEffect } from 'react';
+import { HeroSection, MUSIC_URL } from '@/components/HeroSection';
+import { ContentSections } from '@/components/ContentSections';
+import { RsvpSection } from '@/components/RsvpSection';
 
 const WEDDING_DATE = new Date('2026-09-06T11:20:00');
 
-/* ── Scroll-reveal hook ── */
 function useReveal() {
   useEffect(() => {
     const els = document.querySelectorAll('.reveal');
@@ -21,7 +17,6 @@ function useReveal() {
   }, []);
 }
 
-/* ── Countdown hook ── */
 function useCountdown(target: Date) {
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   useEffect(() => {
@@ -46,276 +41,28 @@ export default function Index() {
   useReveal();
   const countdown = useCountdown(WEDDING_DATE);
 
-  /* Music */
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.6);
   const [musicStarted, setMusicStarted] = useState(false);
 
-  const startMusic = useCallback(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.volume = volume;
-    audio.play()
-      .then(() => { setPlaying(true); setMusicStarted(true); })
-      .catch(() => { setMusicStarted(true); });
-  }, [volume]);
-
-  const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (playing) { audio.pause(); setPlaying(false); }
-    else { audio.play().then(() => setPlaying(true)).catch((_e) => {}); }
-  };
-
-  const handleVolume = (v: number) => {
-    setVolume(v);
-    if (audioRef.current) audioRef.current.volume = v;
-  };
-
-  /* RSVP Form */
-  const [name, setName] = useState('');
-  const [attendance, setAttendance] = useState('');
-  const [guestsCount, setGuestsCount] = useState(1);
-  const [wish, setWish] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [sending, setSending] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!name || !attendance) return;
-    setSending(true);
-    try {
-      await fetch(VK_NOTIFY_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, attendance, guests_count: guestsCount, message: wish }),
-      });
-    } catch (_e) { /* ignore */ }
-    setSending(false);
-    setSubmitted(true);
-  };
-
   return (
     <div className="inv">
       <audio ref={audioRef} src={MUSIC_URL} loop preload="auto" />
 
-      {/* ── HERO ── */}
-      <section className="hero">
-        <div className="hero-bg" />
-        <div className="hero-inner">
+      <HeroSection
+        audioRef={audioRef}
+        playing={playing}
+        setPlaying={setPlaying}
+        volume={volume}
+        setVolume={setVolume}
+        musicStarted={musicStarted}
+        setMusicStarted={setMusicStarted}
+      />
 
-          {/* Music button */}
-          {!musicStarted ? (
-            <button className="music-trigger reveal" onClick={startMusic}>
-              <span className="music-icon">▷</span>
-              <span className="music-note">♪</span>
-              ВКЛЮЧИТЬ МУЗЫКУ
-            </button>
-          ) : (
-            <div className="mini-player reveal">
-              <button className="mini-play" onClick={togglePlay}>{playing ? '⏸' : '▷'}</button>
-              <span className="mini-label">Golden Brown × Love Story</span>
-              <input
-                type="range" min={0} max={1} step={0.02}
-                value={volume}
-                onChange={e => handleVolume(Number(e.target.value))}
-                className="vol-range"
-              />
-            </div>
-          )}
-          {!musicStarted && <p className="music-hint">Нажмите, чтобы включить музыку</p>}
+      <ContentSections countdown={countdown} />
 
-          <h1 className="hero-title reveal">Свадебное приглашение</h1>
-          <p className="hero-names-top reveal">СОНЯ · 6 СЕНТЯБРЯ 2026</p>
-
-          {/* Save the date card */}
-          <div className="save-card reveal">
-            <div className="save-inner">
-              <p className="save-eyebrow">Мы женимся!</p>
-              <p className="save-sub">и счастливы пригласить вас</p>
-              <div className="names-block">
-                <span className="name-big">Соня</span>
-                <span className="amp">&</span>
-                <span className="name-big">...</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Save the date */}
-          <div className="std-box reveal">
-            <p className="std-label">SAVE THE DATE</p>
-            <p className="std-date">06 / 09 / 26</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── COUNTDOWN ── */}
-      <section className="section cream">
-        <div className="sec-inner">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/57/Cupid_Bouguereau_%281875%29.jpg/512px-Cupid_Bouguereau_%281875%29.jpg"
-            alt="Купидон"
-            className="cupid reveal"
-          />
-          <p className="quote-text reveal">
-            Мы так счастливы пригласить вас разделить с<br />нами радость нашей любви…
-          </p>
-
-          <h2 className="sec-title reveal">До свадьбы осталось</h2>
-          <div className="countdown reveal">
-            {[
-              { v: countdown.days, l: 'дней' },
-              { v: countdown.hours, l: 'часов' },
-              { v: countdown.minutes, l: 'минут' },
-              { v: countdown.seconds, l: 'секунд' },
-            ].map(({ v, l }) => (
-              <div key={l} className="cd-item">
-                <span className="cd-num">{String(v).padStart(2, '0')}</span>
-                <span className="cd-label">{l}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── LOCATION ── */}
-      <section className="section dark-section">
-        <div className="sec-inner">
-          <h2 className="sec-title light reveal">Локация</h2>
-          <div className="location-card reveal">
-            <p className="loc-flowers">🌸 🌺 🌸</p>
-            <p className="loc-name">г/к «Аврора», 1 этаж</p>
-            <p className="loc-addr">ул. Поворотникова, д. 6</p>
-            <div className="loc-img-wrap">
-              <img
-                src="https://cdn.poehali.dev/projects/968b4fb1-7f9f-468c-b13b-8b979d7207c2/bucket/3477840c-6bc0-474b-b092-f52cef28e42b.png"
-                alt="г/к Аврора"
-                className="loc-img"
-              />
-            </div>
-            <p className="loc-flowers">🌺 🌸 🌺</p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── TIMING ── */}
-      <section className="section cream">
-        <div className="sec-inner">
-          <h2 className="sec-title reveal">Тайминг</h2>
-          <div className="timeline">
-            {[
-              { time: '11:20', title: 'Церемония в ЗАГСе', sub: 'Центральный ЗАГС' },
-              { time: '16:30', title: 'Сбор гостей', sub: 'г/к «Аврора»' },
-              { time: '17:00', title: 'Праздничный банкет', sub: 'Торжество и угощения' },
-              { time: '23:00', title: 'Окончание вечера', sub: 'Свадебный торт & Прощание' },
-            ].map(({ time, title, sub }, i) => (
-              <div key={i} className="tl-item reveal" style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className="tl-time">{time}</div>
-                <div className="tl-line" />
-                <div className="tl-content">
-                  <p className="tl-title">{title}</p>
-                  <p className="tl-sub">{sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── DRESS CODE ── */}
-      <section className="section dark-section">
-        <div className="sec-inner">
-          <h2 className="sec-title light reveal">Дресс-код</h2>
-          <div className="dress-colors reveal">
-            <span className="dc-circle" style={{ background: '#6d1a2a' }} />
-            <span className="dc-circle" style={{ background: '#e8e0d5' }} />
-            <span className="dc-circle" style={{ background: '#d4859a' }} />
-            <span className="dc-circle" style={{ background: '#c9b99a' }} />
-          </div>
-          <p className="dress-text reveal">
-            Нам будет приятно видеть вас в тёплых, элегантных<br />
-            нарядах цветовой гаммы нашей свадьбы
-          </p>
-          <div className="sun reveal">☀️</div>
-        </div>
-      </section>
-
-      {/* ── RSVP ── */}
-      <section className="section cream">
-        <div className="sec-inner">
-          <h2 className="sec-title reveal">Форма гостя</h2>
-          <p className="rsvp-sub reveal">Сможете ли вы прийти? Пожалуйста, ответьте до 1 августа 2026</p>
-
-          {submitted ? (
-            <div className="success reveal">
-              <div className="success-icon">💌</div>
-              <p className="success-title">Спасибо!</p>
-              <p className="success-sub">Твой ответ получен — очень ждём тебя!</p>
-            </div>
-          ) : (
-            <form className="rsvp-form reveal" onSubmit={handleSubmit}>
-              <input
-                className="f-input"
-                type="text"
-                placeholder="Имя Фамилия"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-              />
-
-              <div className="radio-group">
-                <label className={`radio-opt${attendance === 'yes' ? ' selected' : ''}`}>
-                  <input type="radio" name="att" value="yes" onChange={() => setAttendance('yes')} hidden />
-                  Да, с удовольствием буду
-                </label>
-                <label className={`radio-opt${attendance === 'no' ? ' selected' : ''}`}>
-                  <input type="radio" name="att" value="no" onChange={() => setAttendance('no')} hidden />
-                  К сожалению, не смогу
-                </label>
-                <label className={`radio-opt${attendance === 'maybe' ? ' selected' : ''}`}>
-                  <input type="radio" name="att" value="maybe" onChange={() => setAttendance('maybe')} hidden />
-                  Пока не уверен(а)
-                </label>
-              </div>
-
-              {attendance === 'yes' && (
-                <div className="counter-row">
-                  <span className="counter-label">Количество гостей:</span>
-                  <div className="counter">
-                    <button type="button" className="cnt-btn" onClick={() => setGuestsCount(Math.max(1, guestsCount - 1))}>−</button>
-                    <span className="cnt-val">{guestsCount}</span>
-                    <button type="button" className="cnt-btn" onClick={() => setGuestsCount(Math.min(10, guestsCount + 1))}>+</button>
-                  </div>
-                </div>
-              )}
-
-              <textarea
-                className="f-input f-textarea"
-                placeholder="Пожелания молодожёнам (необязательно)"
-                value={wish}
-                onChange={e => setWish(e.target.value)}
-                rows={3}
-              />
-
-              <button
-                className="submit-btn"
-                type="submit"
-                disabled={sending || !name || !attendance}
-              >
-                {sending ? 'Отправляю...' : 'Отправить ответ'}
-              </button>
-            </form>
-          )}
-        </div>
-      </section>
-
-      {/* ── FOOTER ── */}
-      <footer className="footer">
-        <p className="footer-title">Соня & ...</p>
-        <p className="footer-date">6 сентября 2026</p>
-        <p className="footer-love">С любовью ♥</p>
-      </footer>
+      <RsvpSection />
 
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Golos+Text:wght@400;500&family=Great+Vibes&display=swap');
