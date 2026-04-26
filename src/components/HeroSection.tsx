@@ -68,23 +68,23 @@ export function HeroSection({
         {!musicStarted && <p className="music-hint">Нажмите, чтобы включить музыку</p>}
 
         <h1 className="hero-title reveal">Свадебное приглашение</h1>
-        <p className="hero-names-top reveal">СОНЯ · 6 СЕНТЯБРЯ 2026</p>
+        <p className="hero-names-top reveal">ЕВГЕНИЙ & СОФИЯ · 22 ИЮЛЯ 2026</p>
 
         <div className="save-card reveal">
           <div className="save-inner">
             <p className="save-eyebrow">Мы женимся!</p>
             <p className="save-sub">и счастливы пригласить вас</p>
             <div className="names-block">
-              <span className="name-big">Соня</span>
+              <span className="name-big">Евгений</span>
               <span className="amp">&</span>
-              <span className="name-big">...</span>
+              <span className="name-big">София</span>
             </div>
           </div>
         </div>
 
         <div className="std-box reveal">
           <p className="std-label">SAVE THE DATE</p>
-          <p className="std-date">06 / 09 / 26</p>
+          <p className="std-date">22 / 07 / 26</p>
         </div>
       </div>
     </section>

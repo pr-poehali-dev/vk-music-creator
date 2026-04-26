@@ -51,7 +51,7 @@ export function ContentSections({ countdown }: ContentSectionsProps) {
             <p className="loc-addr">ул. Поворотникова, д. 6</p>
             <div className="loc-img-wrap">
               <img
-                src="https://cdn.poehali.dev/projects/968b4fb1-7f9f-468c-b13b-8b979d7207c2/bucket/3477840c-6bc0-474b-b092-f52cef28e42b.png"
+                src="https://cdn.poehali.dev/projects/968b4fb1-7f9f-468c-b13b-8b979d7207c2/bucket/b48c2482-f8eb-4302-ab63-bf68c2859caf.jpeg"
                 alt="г/к Аврора"
                 className="loc-img"
               />

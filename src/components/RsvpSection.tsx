@@ -98,8 +98,8 @@ export function RsvpSection() {
 
       {/* ── FOOTER ── */}
       <footer className="footer">
-        <p className="footer-title">Соня & ...</p>
-        <p className="footer-date">6 сентября 2026</p>
+        <p className="footer-title">Евгений & София</p>
+        <p className="footer-date">22 июля 2026</p>
         <p className="footer-love">С любовью ♥</p>
       </footer>
     </>

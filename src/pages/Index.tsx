@@ -3,7 +3,7 @@ import { HeroSection, MUSIC_URL } from '@/components/HeroSection';
 import { ContentSections } from '@/components/ContentSections';
 import { RsvpSection } from '@/components/RsvpSection';
 
-const WEDDING_DATE = new Date('2026-09-06T11:20:00');
+const WEDDING_DATE = new Date('2026-07-22T11:20:00');
 
 function useReveal() {
   useEffect(() => {
@@ -45,6 +45,22 @@ export default function Index() {
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.6);
   const [musicStarted, setMusicStarted] = useState(false);
+
+  // Автозапуск при первом касании/клике пользователя
+  useEffect(() => {
+    const tryPlay = () => {
+      const audio = audioRef.current;
+      if (!audio || musicStarted) return;
+      audio.volume = 0.6;
+      audio.play().then(() => { setPlaying(true); setMusicStarted(true); }).catch(() => {});
+    };
+    document.addEventListener('click', tryPlay, { once: true });
+    document.addEventListener('touchstart', tryPlay, { once: true });
+    return () => {
+      document.removeEventListener('click', tryPlay);
+      document.removeEventListener('touchstart', tryPlay);
+    };
+  }, [musicStarted]);
 
   return (
     <div className="inv">
